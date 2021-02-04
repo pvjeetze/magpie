@@ -235,8 +235,21 @@ sets
    wat_dem Water demand sectors / agriculture, industry, electricity, domestic, ecosystem /
 
 ***LAND POOLS***
-   land Land pools
-        / crop, past, forestry, primforest, secdforest, urban, other /
+   land_init Land pools of the land use initialisation dataset
+      / crop, past, forestry, primforest, secdforest, urban, primother, secdother /
+
+   land Land pools used in the model
+      / crop, past, forestry, primforest, secdforest, urban, other /
+
+   land_read(land, land_init) Relation between land pools in initialisation dataset and the model
+      /crop       . (crop)
+       past       . (past)
+       forestry   . (forestry)
+       primforest . (primforest)
+       secdforest . (secdforest)
+       urban      . (urban)
+       other      . (primother, secdother)
+      /
 
   land_ag(land) Agricultural land pools
                   / crop, past /

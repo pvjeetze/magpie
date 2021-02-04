@@ -6,10 +6,13 @@
 *** |  Contact: magpie@pik-potsdam.de
 
 
+
+pm_land_start(j,land) = sum(land_read(land, land_init), f10_land("y1995",j,land_init));
+*pm_land_start(j,land) = f10_land("y1995",j,land);
+
 *due to some rounding errors the input data currently may contain in some cases
 *very small, negative numbers. These numbers have to be set to 0 as area
 *cannot be smaller than 0!
-pm_land_start(j,land) = f10_land("y1995",j,land);
 pm_land_start(j,land)$(pm_land_start(j,land)<0) = 0;
 
 pcm_land(j,land) = pm_land_start(j,land);
