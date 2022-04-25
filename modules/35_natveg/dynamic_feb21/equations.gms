@@ -47,6 +47,18 @@
           sum(bii_class_secd, sum(ac_to_bii_class_secd(ac,bii_class_secd), v35_other(j2,ac)) *
           fm_bii_coeff(bii_class_secd,potnatveg)) * fm_luh2_side_layers(j2,potnatveg);
 
+*' Natural land conservation
+
+q35_primforest_consv(j2).. vm_land(j2,"primforest")
+          =g=
+          sum(ct,pm_land_conservation(ct,j2,"primforest","protect"));
+
+q35_secdforest_consv(j2).. vm_land(j2,"secdforest") + vm_land_forestry(j2,"ndc") + vm_land_forestry(j2,"aff")
+          =g=
+          sum((ct,consv_type), pm_land_conservation(ct,j2,"secdforest",consv_type));
+
+q35_other_consv(j2).. vm_land(j2,"other") =g= sum((ct,consv_type), pm_land_conservation(ct,j2,"other",consv_type));
+
 *' The following technical calculations are needed for reducing differences in land-use patterns between time steps.
 *' The gross change in natural vegetation is calculated based on land expansion and
 *' land contraction of other land, and land reduction of primary and secondary forest.
@@ -160,7 +172,7 @@ q35_secdforest_regeneration(j2)..
                           =e=
                           sum(ac_sub,v35_hvarea_secdforest(j2,ac_sub))
                         + v35_hvarea_primforest(j2)
-                        + sum(ct,pm_land_conservation(ct,j2,"secdforest","restore"))
+                        + sum(ct,v35_secdforest_restor(ct,j2))
                           ;
 
 *' Harvested other land is still considered other land

@@ -149,6 +149,9 @@ v32_land.fx(j,"aff",ac_est)$(fm_carbon_density(t,j,"forestry","vegc") <= 20) = 0
 
 m_boundfix(v32_land,(j,type32,ac_sub),up,10e-5);
 
+** Aggregated area of each forestry type
+vm_land_forestry.l(j,type32) = sum(ac, v32_land.l(j,type32,ac));
+
 ** Calculate future yield based on rotation length
 if((ord(t)=1),
 pc32_yield_forestry_future(j) = sum(ac$(ord(ac) = p32_rotation_cellular_estb(t,j)-1), pm_timber_yield(t,j,ac,"forestry"));
@@ -162,7 +165,6 @@ p32_updated_gs_reg(t,i) = 1;
 p32_updated_gs_reg(t,i)$(sum((cell(i,j),ac_sub),p32_land(t,j,"plant",ac_sub))>0) = (sum((cell(i,j),ac_sub),(pm_timber_yield(t,j,ac_sub,"forestry") / sm_wood_density) * p32_land(t,j,"plant",ac_sub))/ sum((cell(i,j),ac_sub),p32_land(t,j,"plant",ac_sub)));
 
 ** Avoid conflict between afforestation for carbon uptake on land and secdforest restoration
-pm_land_conservation(t,j,"secdforest","restore")$(pm_land_conservation(t,j,"secdforest","restore") > sum(ac, p32_land(t,j,"ndc",ac) + p32_land(t,j,"aff",ac))) = pm_land_conservation(t,j,"secdforest","restore") - sum(ac, p32_land(t,j,"ndc",ac) + p32_land(t,j,"aff",ac));
-pm_land_conservation(t,j,"secdforest","restore")$(pm_land_conservation(t,j,"secdforest","restore") <= sum(ac, p32_land(t,j,"ndc",ac) + p32_land(t,j,"aff",ac))) = 0;
-pm_land_conservation(t,j,land,"restore")$((sum(land2, pm_land_conservation(t,j,land2,"protect")) + sum(ac, p32_land(t,j,"ndc",ac) + p32_land(t,j,"aff",ac)) + pcm_land(j,"urban")) >= sum(land2, pcm_land(j,land2))) = 0;
+* pm_land_conservation(t,j,"secdforest","restore")$(pm_land_conservation(t,j,"secdforest","restore") > sum(ac, p32_land(t,j,"ndc",ac) + p32_land(t,j,"aff",ac))) = pm_land_conservation(t,j,"secdforest","restore") - sum(ac, p32_land(t,j,"ndc",ac) + p32_land(t,j,"aff",ac));
+* pm_land_conservation(t,j,"secdforest","restore")$(pm_land_conservation(t,j,"secdforest","restore") <= sum(ac, p32_land(t,j,"ndc",ac) + p32_land(t,j,"aff",ac))) = 0;
 *** EOF presolve.gms ***

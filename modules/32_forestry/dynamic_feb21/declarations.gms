@@ -66,7 +66,8 @@ parameters
 positive variables
  vm_cost_fore(i)                                    Forestry costs (Mio USD)
  v32_cost_hvarea(i)                                 Cost of harvesting timber from forests (mio. USD per yr)
- v32_land(j,type32,ac)                              Forestry land pools (mio. ha)
+ v32_land(j,type32,ac)                              Forestry land pools per age class (mio. ha)
+ vm_land_forestry(j,type32)                         Total area of each forestry type (mio. ha)
  v32_land_missing(j)                                Forestry land which can be used at extrmemly high costs in case not enough area is available for new establishment (mio. ha)
  vm_landdiff_forestry                               Aggregated difference in forestry land compared to previous timestep (mio. ha)
  v32_cost_recur(i)                                  Recurring forest management costs (USD per ha)
@@ -113,7 +114,8 @@ equations
 parameters
  ov_cost_fore(t,i,type)                     Forestry costs (Mio USD)
  ov32_cost_hvarea(t,i,type)                 Cost of harvesting timber from forests (mio. USD per yr)
- ov32_land(t,j,type32,ac,type)              Forestry land pools (mio. ha)
+ ov32_land(t,j,type32,ac,type)              Forestry land pools per age class (mio. ha)
+ ov_land_forestry(t,j,type32,type)          Total area of each forestry type (mio. ha)
  ov32_land_missing(t,j,type)                Forestry land which can be used at extrmemly high costs in case not enough area is available for new establishment (mio. ha)
  ov_landdiff_forestry(t,type)               Aggregated difference in forestry land compared to previous timestep (mio. ha)
  ov32_cost_recur(t,i,type)                  Recurring forest management costs (USD per ha)

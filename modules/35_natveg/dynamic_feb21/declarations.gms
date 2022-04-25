@@ -24,7 +24,6 @@ parameters
  p35_disturbance_loss_primf(t,j)                  Loss due to disturbances in primary forest (mio. ha)
  i35_plantedclass_ac(j,ac)                        Area of age-classes in secondary forest (1)
  p35_poulter_dist(j,ac)                           Share of age-classes in secondary forest (1)
- p35_save_dist(j,ac)                              Distribution of secondary forest saving (1)
  p35_land(t,j,land_natveg,ac)                     Natural vegetation area (mio. ha)
  p35_updated_gs_natfor(t,i)                       Updated growing stock in natural forests after calibration (m3 per ha)
  p35_land_start_ac(j,ac,land_natveg)              Initial Natural vegetation area (mio. ha)
@@ -61,14 +60,16 @@ equations
  q35_bv_primforest(j,potnatveg)                Biodiversity value of primary forest (Mha)
  q35_bv_secdforest(j,potnatveg)                Biodiversity value of secondary forest (Mha)
  q35_bv_other(j,potnatveg)                     Biodiversity value of other land (Mha)
-*  q35_restoration_other(j)                    Land restoration (establishment of other land) (Mha)
-
+ q35_primforest_consv(j)                       Primary forest land conservation (Mha)
+ q35_secdforest_consv(j)                       Secondary forest land conservation (Mha)
+ q35_other_consv(j)                            Other land conservation (Mha)
 ;
 
 positive variables
   v35_secdforest(j,ac)                          Detailed stock of secdforest (mio. ha)
   v35_other(j,ac)                               Detailed stock of other land (mio. ha)
   vm_landdiff_natveg                            Aggregated difference in natveg land compared to previous timestep (mio. ha)
+  v35_secdforest_restor(t,j)                    Secondary forest restoration area (mio. ha)
   v35_other_expansion(j,ac)                     Other land expansion compared to previous timestep (mio. ha)
   v35_other_reduction(j,ac)                     Other land reduction compared to previous timestep (mio. ha)
   v35_secdforest_expansion(j,ac)                Secdforest reduction compared to previous timestep (mio. ha)
@@ -87,6 +88,7 @@ parameters
  ov35_secdforest(t,j,ac,type)                   Detailed stock of secdforest (mio. ha)
  ov35_other(t,j,ac,type)                        Detailed stock of other land (mio. ha)
  ov_landdiff_natveg(t,type)                     Aggregated difference in natveg land compared to previous timestep (mio. ha)
+ ov35_secdforest_restor(t,j,type)               Secondary forest restoration area (mio. ha)
  ov35_other_expansion(t,j,ac,type)              Other land expansion compared to previous timestep (mio. ha)
  ov35_other_reduction(t,j,ac,type)              Other land reduction compared to previous timestep (mio. ha)
  ov35_secdforest_expansion(t,j,ac,type)         Secdforest reduction compared to previous timestep (mio. ha)
@@ -122,5 +124,8 @@ parameters
  oq35_bv_primforest(t,j,potnatveg,type)         Biodiversity value of primary forest (Mha)
  oq35_bv_secdforest(t,j,potnatveg,type)         Biodiversity value of secondary forest (Mha)
  oq35_bv_other(t,j,potnatveg,type)              Biodiversity value of other land (Mha)
+ oq35_primforest_consv(t,j,type)                Primary forest land conservation (Mha)
+ oq35_secdforest_consv(t,j,type)                Secondary forest land conservation (Mha)
+ oq35_other_consv(t,j,type)                     Other land conservation (Mha)
 ;
 *##################### R SECTION END (OUTPUT DECLARATIONS) #####################
