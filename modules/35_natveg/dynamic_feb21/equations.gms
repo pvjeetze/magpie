@@ -50,14 +50,18 @@
 *' Natural land conservation
 
 q35_primforest_consv(j2).. vm_land(j2,"primforest")
-          =g=
-          sum(ct,pm_land_conservation(ct,j2,"primforest","protect"));
+                           =g=
+                           sum(ct,pm_land_conservation(ct,j2,"primforest","protect"));
 
-q35_secdforest_consv(j2).. vm_land(j2,"secdforest") + vm_land_forestry(j2,"ndc") + vm_land_forestry(j2,"aff")
-          =g=
-          sum((ct,consv_type), pm_land_conservation(ct,j2,"secdforest",consv_type));
+q35_secdforest_consv(j2).. vm_land(j2,"secdforest")
+                         + vm_land_forestry(j2,"ndc")
+                         + vm_land_forestry(j2,"aff")$(s32_aff_plantation = 0)
+                           =g=
+                           sum((ct,consv_type), pm_land_conservation(ct,j2,"secdforest",consv_type));
 
-q35_other_consv(j2).. vm_land(j2,"other") =g= sum((ct,consv_type), pm_land_conservation(ct,j2,"other",consv_type));
+q35_other_consv(j2).. vm_land(j2,"other")
+                      =g=
+                      sum((ct,consv_type), pm_land_conservation(ct,j2,"other",consv_type));
 
 *' The following technical calculations are needed for reducing differences in land-use patterns between time steps.
 *' The gross change in natural vegetation is calculated based on land expansion and
