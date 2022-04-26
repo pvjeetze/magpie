@@ -102,12 +102,15 @@ vm_land.lo(j,"primforest") = 0;
 else
 vm_land.lo(j,"primforest") = (1-s35_natveg_harvest_shr) * pcm_land(j,"primforest");
 );
+* Primary forest conservation
+vm_land.lo(j,"primforest")$(vm_land.lo(j,"primforest") < pm_land_conservation(t,j,"primforest","protect")) = pm_land_conservation(t,j,"primforest","protect");
 vm_land.up(j,"primforest") = pcm_land(j,"primforest");
 m_boundfix(vm_land,(j,"primforest"),l,10e-5);
 
 * Secondary forest
 
 *reset upper bound
+v35_secdforest.lo(j,ac) = 0;
 v35_secdforest.up(j,ac) = Inf;
 
 if (sum(sameas(t_past,t),1) = 1,
@@ -121,6 +124,13 @@ v35_secdforest.lo(j,ac_sub)$(s35_secdf_distribution=2) = (1-s35_natveg_harvest_s
 v35_secdforest.up(j,ac_sub) = pc35_secdforest(j,ac_sub);
 m_boundfix(v35_secdforest,(j,ac_sub),l,10e-5);
 
+* Secondary forest restoration
+v35_secdforest_restor.l(j) = pm_land_conservation(t,j,"secdforest","restore") - vm_land_forestry.l(j,"ndc") - vm_land_forestry.l(j,"aff");
+v35_secdforest_restor.l(j)$(v35_secdforest_restor.l(j) < 0) = 0;
+
+* Secondary forest conservation
+vm_land.lo(j,"secdforest") = pm_land_conservation(t,j,"secdforest","protect") + v35_secdforest_restor.l(j);
+
 ** Other land
 
 *reset bounds
@@ -130,12 +140,8 @@ v35_other.up(j,ac) = Inf;
 v35_other.up(j,ac_sub) = pc35_other(j,ac_sub);
 m_boundfix(v35_other,(j,ac_sub),l,10e-5);
 
-* ----------------------------
-* Secondary forest restoration
-* ----------------------------
-
-v35_secdforest_restor.l(j) = pm_land_conservation(t,j,"secdforest","restore") - vm_land_forestry.l(j,"ndc") - vm_land_forestry.l(j,"aff");
-v35_secdforest_restor.l(j)$(v35_secdforest_restor.l(j) < 0) = 0;
+* Other land conservation
+vm_land.lo(j,"other") = sum(consv_type, pm_land_conservation(t,j,"other",consv_type));
 
 * ------------------------------
 * Calculate carbon density

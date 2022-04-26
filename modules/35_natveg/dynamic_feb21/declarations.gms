@@ -60,9 +60,9 @@ equations
  q35_bv_primforest(j,potnatveg)                Biodiversity value of primary forest (Mha)
  q35_bv_secdforest(j,potnatveg)                Biodiversity value of secondary forest (Mha)
  q35_bv_other(j,potnatveg)                     Biodiversity value of other land (Mha)
- q35_primforest_consv(j)                       Primary forest land conservation (Mha)
- q35_secdforest_consv(j)                       Secondary forest land conservation (Mha)
- q35_other_consv(j)                            Other land conservation (Mha)
+*  q35_primforest_consv(j)                       Primary forest land conservation (Mha)
+*  q35_secdforest_consv(j)                       Secondary forest land conservation (Mha)
+*  q35_other_consv(j)                            Other land conservation (Mha)
 ;
 
 positive variables
@@ -124,8 +124,5 @@ parameters
  oq35_bv_primforest(t,j,potnatveg,type)         Biodiversity value of primary forest (Mha)
  oq35_bv_secdforest(t,j,potnatveg,type)         Biodiversity value of secondary forest (Mha)
  oq35_bv_other(t,j,potnatveg,type)              Biodiversity value of other land (Mha)
- oq35_primforest_consv(t,j,type)                Primary forest land conservation (Mha)
- oq35_secdforest_consv(t,j,type)                Secondary forest land conservation (Mha)
- oq35_other_consv(t,j,type)                     Other land conservation (Mha)
 ;
 *##################### R SECTION END (OUTPUT DECLARATIONS) #####################
