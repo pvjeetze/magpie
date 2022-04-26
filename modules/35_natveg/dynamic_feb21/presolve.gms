@@ -109,7 +109,7 @@ m_boundfix(vm_land,(j,"primforest"),l,10e-5);
 
 * Secondary forest
 
-*reset upper bound
+*reset bound
 v35_secdforest.lo(j,ac) = 0;
 v35_secdforest.up(j,ac) = Inf;
 

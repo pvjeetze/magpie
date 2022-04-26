@@ -150,7 +150,7 @@ v32_land.fx(j,"aff",ac_est)$(fm_carbon_density(t,j,"forestry","vegc") <= 20) = 0
 m_boundfix(v32_land,(j,type32,ac_sub),up,10e-5);
 
 ** Aggregated area of each forestry type
-vm_land_forestry.l(j,type32) = sum(ac, v32_land.l(j,type32,ac));
+vm_land_forestry.fx(j,type32) = sum(ac, v32_land.l(j,type32,ac));
 
 ** Calculate future yield based on rotation length
 if((ord(t)=1),
