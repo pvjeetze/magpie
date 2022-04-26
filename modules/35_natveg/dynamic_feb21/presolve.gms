@@ -121,6 +121,10 @@ v35_secdforest.lo(j,ac_sub)$(s35_secdf_distribution=1) = (1-s35_natveg_harvest_s
 v35_secdforest.lo(j,ac_sub)$(s35_secdf_distribution=2) = (1-s35_natveg_harvest_shr) * pc35_secdforest(j,ac_sub);
 * v35_secdforest.lo(j,"acx")$(s35_secdf_distribution=2)  = (1-s35_natveg_harvest_shr) * pc35_secdforest(j,"acx");
 );
+
+* Secondary forest conservation
+v35_secdforest.lo(j,ac_sub)$(v35_secdforest.lo(j,ac_sub) < pm_land_conservation(t,j,"secdforest","protect")) = pm_land_conservation(t,j,"secdforest","protect");
+* upper bound
 v35_secdforest.up(j,ac_sub) = pc35_secdforest(j,ac_sub);
 m_boundfix(v35_secdforest,(j,ac_sub),l,10e-5);
 
@@ -130,9 +134,9 @@ v35_secdforest_restor.fx(j) = 0;
 v35_secdforest_restor.fx(j) = pm_land_conservation(t,j,"secdforest","restore") - vm_land_forestry.l(j,"ndc") - vm_land_forestry.l(j,"aff");
 v35_secdforest_restor.fx(j)$(v35_secdforest_restor.l(j) < 0) = 0;
 
-* Secondary forest conservation
-vm_land.lo(j,"secdforest") = pm_land_conservation(t,j,"secdforest","protect") + v35_secdforest_restor.l(j);
-m_boundfix(vm_land,(j,"secdforest"),l,10e-5);
+* * Secondary forest conservation
+* vm_land.lo(j,"secdforest") = pm_land_conservation(t,j,"secdforest","protect") + v35_secdforest_restor.l(j);
+* m_boundfix(vm_land,(j,"secdforest"),l,10e-5);
 
 ** Other land
 
