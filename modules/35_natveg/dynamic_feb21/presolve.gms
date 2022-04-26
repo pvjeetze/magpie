@@ -41,8 +41,8 @@ pc35_secdforest(j,ac_sub) = pc35_secdforest(j,ac_sub) - p35_disturbance_loss_sec
 pcm_land(j,"primforest") = pcm_land(j,"primforest") - p35_disturbance_loss_primf(t,j);
 vm_land.l(j,"primforest") = pcm_land(j,"primforest");
 
-* account for forest damage in land conservation
-pm_land_conservation(t,j,"primforest","protect")$(pm_land_conservation(t,j,"primforest","protect") > pcm_land(j,"primforest")) = pcm_land(j,"primforest");
+* account for forest damage in primforest conservation
+pm_land_conservation(t,j,"primforest","protect")$(pm_land_conservation(t,j,"primforest","protect") > vm_land.l(j,"primforest")) = vm_land.l(j,"primforest");
 
 * Regrowth of natural vegetation (natural succession) is modelled by shifting age-classes according to time step length.
 s35_shift = m_timestep_length_forestry/5;
