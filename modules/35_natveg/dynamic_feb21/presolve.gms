@@ -125,11 +125,14 @@ v35_secdforest.up(j,ac_sub) = pc35_secdforest(j,ac_sub);
 m_boundfix(v35_secdforest,(j,ac_sub),l,10e-5);
 
 * Secondary forest restoration
+* reset
+v35_secdforest_restor.l(j) = 0;
 v35_secdforest_restor.l(j) = pm_land_conservation(t,j,"secdforest","restore") - vm_land_forestry.l(j,"ndc") - vm_land_forestry.l(j,"aff");
 v35_secdforest_restor.l(j)$(v35_secdforest_restor.l(j) < 0) = 0;
 
 * Secondary forest conservation
 vm_land.lo(j,"secdforest") = pm_land_conservation(t,j,"secdforest","protect") + v35_secdforest_restor.l(j);
+m_boundfix(vm_land,(j,"secdforest"),l,10e-5);
 
 ** Other land
 
@@ -142,6 +145,7 @@ m_boundfix(v35_other,(j,ac_sub),l,10e-5);
 
 * Other land conservation
 vm_land.lo(j,"other") = sum(consv_type, pm_land_conservation(t,j,"other",consv_type));
+m_boundfix(vm_land,(j,"other"),l,10e-5);
 
 * ------------------------------
 * Calculate carbon density
