@@ -73,8 +73,8 @@ p22_other_restore_pot(t,j)$(p22_other_restore_pot(t,j) < 0) = 0;
 pm_land_conservation(t,j,"other","restore")$(pm_land_conservation(t,j,"other","restore") > p22_other_restore_pot(t,j)) = p22_other_restore_pot(t,j);
 
 * Switch for land restoration during future time steps
-if(m_year(t) > sm_fix_SSP2,
-pm_land_conservation(t,j,land,"restore")$(s22_restore_land = 0) = 0;
+if(s22_restore_land = 0,
+pm_land_conservation(t,j,land,"restore")$(m_year(t) > sm_fix_SSP2) = 0;
 );
 
 * NPI/NDC
