@@ -55,7 +55,7 @@ q35_primforest_consv(j2).. vm_land(j2,"primforest")
 
 q35_secdforest_consv(j2).. vm_land(j2,"secdforest")
                          + vm_land_forestry(j2,"ndc")
-                         + vm_land_forestry(j2,"aff")$(s32_aff_plantation = 0)
+                         + vm_land_forestry(j2,"aff")
                            =g=
                            sum((ct,consv_type), pm_land_conservation(ct,j2,"secdforest",consv_type));
 
