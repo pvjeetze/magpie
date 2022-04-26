@@ -23,7 +23,7 @@ if(s35_forest_damage=1,
 	p35_disturbance_loss_primf(t,j) = pcm_land(j,"primforest") * sum(cell(i,j),f35_forest_lost_share(i,"shifting_agriculture"))*m_timestep_length_forestry;
 	);
 
-* shifting cultivation is faded out until 2030
+* shifting cultivation is faded out
 if(s35_forest_damage=2,
 	p35_disturbance_loss_secdf(t,j,ac_sub) = pc35_secdforest(j,ac_sub) * sum(cell(i,j),f35_forest_lost_share(i,"shifting_agriculture"))*m_timestep_length_forestry*(1 - p35_damage_fader(t));
 	p35_disturbance_loss_primf(t,j) = pcm_land(j,"primforest") * sum(cell(i,j),f35_forest_lost_share(i,"shifting_agriculture"))*m_timestep_length_forestry*(1 - p35_damage_fader(t));
@@ -40,6 +40,9 @@ pc35_secdforest(j,ac_est) = pc35_secdforest(j,ac_est) + sum(ac_sub,p35_disturban
 pc35_secdforest(j,ac_sub) = pc35_secdforest(j,ac_sub) - p35_disturbance_loss_secdf(t,j,ac_sub);
 pcm_land(j,"primforest") = pcm_land(j,"primforest") - p35_disturbance_loss_primf(t,j);
 vm_land.l(j,"primforest") = pcm_land(j,"primforest");
+
+* account for forest damage in land conservation
+pm_land_conservation(t,j,"primforest","protect")$(pm_land_conservation(t,j,"primforest","protect") < vm_land.l(j,"primforest")) = vm_land.l(j,"primforest");
 
 * Regrowth of natural vegetation (natural succession) is modelled by shifting age-classes according to time step length.
 s35_shift = m_timestep_length_forestry/5;
@@ -131,8 +134,8 @@ m_boundfix(v35_other,(j,ac_sub),l,10e-5);
 * Secondary forest restoration
 * ----------------------------
 
-v35_secdforest_restor.l(t,j) = pm_land_conservation(t,j,"secdforest","restore") - vm_land_forestry.l(j,"ndc") - vm_land_forestry.l(j,"aff");
-v35_secdforest_restor.l(t,j)$(v35_secdforest_restor.l(t,j) < 0) = 0;
+v35_secdforest_restor.l(j) = pm_land_conservation(t,j,"secdforest","restore") - vm_land_forestry.l(j,"ndc") - vm_land_forestry.l(j,"aff");
+v35_secdforest_restor.l(j)$(v35_secdforest_restor.l(j) < 0) = 0;
 
 * ------------------------------
 * Calculate carbon density

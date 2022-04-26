@@ -69,7 +69,7 @@ positive variables
   v35_secdforest(j,ac)                          Detailed stock of secdforest (mio. ha)
   v35_other(j,ac)                               Detailed stock of other land (mio. ha)
   vm_landdiff_natveg                            Aggregated difference in natveg land compared to previous timestep (mio. ha)
-  v35_secdforest_restor(t,j)                    Secondary forest restoration area (mio. ha)
+  v35_secdforest_restor(j)                    Secondary forest restoration area (mio. ha)
   v35_other_expansion(j,ac)                     Other land expansion compared to previous timestep (mio. ha)
   v35_other_reduction(j,ac)                     Other land reduction compared to previous timestep (mio. ha)
   v35_secdforest_expansion(j,ac)                Secdforest reduction compared to previous timestep (mio. ha)
