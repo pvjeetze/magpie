@@ -9,9 +9,9 @@
 
 *' NPI/NDC land protection policies are implemented as minium forest land and other land stock.
 
- q22_min_forest(j2) .. vm_land(j2,"primforest") + vm_land(j2,"secdforest")
+ q22_min_forest(j2) .. (vm_land(j2,"primforest") + vm_land(j2,"secdforest"))
                        =g=
- 									     sum(ct, p22_min_forest(ct,j2));
+ 						sum(ct, p22_min_forest(ct,j2));
 
  q22_min_other(j2) .. vm_land(j2,"other") =g= sum(ct, p22_min_other(ct,j2));
 

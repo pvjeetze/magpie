@@ -78,5 +78,5 @@ pm_land_conservation(t,j,land,"restore") = 0;
 );
 
 * NPI/NDC
-p22_min_forest(t,j)$(p22_min_forest(t,j) > pcm_land(j,"primforest") + pcm_land(j,"secdforest")) = pcm_land(j,"primforest") + pcm_land(j,"secdforest");
+p22_min_forest(t,j)$(p22_min_forest(t,j) > (pcm_land(j,"primforest") + pcm_land(j,"secdforest"))) = pcm_land(j,"primforest") + pcm_land(j,"secdforest");
 p22_min_other(t,j)$(p22_min_other(t,j) > pcm_land(j,"other")) = pcm_land(j,"other");
