@@ -73,7 +73,7 @@ p35_other(t,j,ac) = p35_other(t,j,ac) - p35_recovered_forest(t,j,ac);
 * assuming protected other land is managed to remain other land
 p35_other(t,j,ac_est)$(sum(ac, p35_other(t,j,ac)) < pm_land_conservation(t,j,"other","protect")) = pm_land_conservation(t,j,"other","protect") - sum(ac, p35_other(t,j,ac));
 p35_secdforest(t,j,ac) =
-			p35_secdforest(t,j,ac) + (p35_recovered_forest(t,j,ac) * (1 - sum(ac_est,p35_other(t,j,ac_est)))/sum(ac2,p35_recovered_forest(t,j,ac2)));
+			p35_secdforest(t,j,ac) + (p35_recovered_forest(t,j,ac) * (1 - sum(ac_est,p35_other(t,j,ac_est)))/sum(ac2,p35_recovered_forest(t,j,ac2)+10e-5));
 *' @stop
 
 pc35_secdforest(j,ac) = p35_secdforest(t,j,ac);
