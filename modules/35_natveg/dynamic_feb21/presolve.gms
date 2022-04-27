@@ -70,9 +70,10 @@ p35_recovered_forest(t,j,ac)$(not sameas(ac,"acx")) =
 			p35_other(t,j,ac)$(pm_carbon_density_ac(t,j,ac,"vegc") > 20);
 p35_other(t,j,ac) = p35_other(t,j,ac) - p35_recovered_forest(t,j,ac);
 * in protected areas move other land back to ac_est instead of secondary forest
+* assuming protected other land is managed to remain other land
 p35_other(t,j,ac_est)$(sum(ac, p35_other(t,j,ac)) < pm_land_conservation(t,j,"other","protect")) = pm_land_conservation(t,j,"other","protect") - sum(ac, p35_other(t,j,ac));
 p35_secdforest(t,j,ac) =
-			p35_secdforest(t,j,ac) + p35_recovered_forest(t,j,ac) - p35_other(t,j,ac_est);
+			p35_secdforest(t,j,ac) + p35_recovered_forest(t,j,ac) - sum(ac_est,p35_other(t,j,ac_est));
 *' @stop
 
 pc35_secdforest(j,ac) = p35_secdforest(t,j,ac);
