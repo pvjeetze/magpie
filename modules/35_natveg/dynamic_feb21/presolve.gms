@@ -72,7 +72,8 @@ p35_recovered_forest(t,j,ac)$(not sameas(ac,"acx")) =
 p35_recovered_forest(t,j,ac)$(sum(ac2, p35_other(t,j,ac2) - p35_recovered_forest(t,j,ac2)) < pm_land_conservation(t,j,"other","protect")) = p35_recovered_forest(t,j,ac) * (1 - (pm_land_conservation(t,j,"other","protect") - sum(ac2, p35_other(t,j,ac2)))/sum(ac2,p35_recovered_forest(t,j,ac2)+10e-5));
 *' Shift adjusted recovered forest to secondary forest
 p35_other(t,j,ac) = p35_other(t,j,ac) - p35_recovered_forest(t,j,ac);
-p35_secdforest(t,j,ac) = p35_secdforest(t,j,ac) + p35_recovered_forest(t,j,ac)
+p35_secdforest(t,j,ac) = p35_secdforest(t,j,ac) + p35_recovered_forest(t,j,ac);
+*' @stop
 
 pc35_secdforest(j,ac) = p35_secdforest(t,j,ac);
 v35_secdforest.l(j,ac) = pc35_secdforest(j,ac);
