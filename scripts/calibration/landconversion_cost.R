@@ -117,21 +117,21 @@ update_calib<-function(gdx_file, calib_accuracy=0.01, damping_factor=0.98, calib
     calib_divergence[getRegions(calib_factor),,][below_limit] <- 0
   }
 
-  # # Special rule for SSA for better balance of land expansion and TC
-  # # Only executed if SSA exists in the regions
-  # sub <- c("SSA")
-  # if (all(sub %in% getRegions(calib_factor))) {
-  #   below_limit <- (calib_factor[sub,,] < 0.5)
-  #   calib_factor[sub,,][below_limit]  <- 0.5
-  #   calib_divergence[sub,,][below_limit] <- 0
-  # }
-  # # Special rule for IND to avoid very strong cropland increase; Only executed if IND exists in the regions
-  # sub <- c("IND")
-  # if (all(sub %in% getRegions(calib_factor))) {
-  #   below_limit <- (calib_factor[sub,,] < 3)
-  #   calib_factor[sub,,][below_limit]  <- 3
-  #   calib_divergence[sub,,][below_limit] <- 0
-  # }
+  # Special rule for SSA for better balance of land expansion and TC
+  # Only executed if SSA exists in the regions
+  sub <- c("SSA")
+  if (all(sub %in% getRegions(calib_factor))) {
+    below_limit <- (calib_factor[sub,,] < 0.5)
+    calib_factor[sub,,][below_limit]  <- 0.5
+    calib_divergence[sub,,][below_limit] <- 0
+  }
+  # Special rule for IND to avoid very strong cropland increase; Only executed if IND exists in the regions
+  sub <- c("IND")
+  if (all(sub %in% getRegions(calib_factor))) {
+    below_limit <- (calib_factor[sub,,] < 3)
+    calib_factor[sub,,][below_limit]  <- 3
+    calib_divergence[sub,,][below_limit] <- 0
+  }
   
   ### write down current calib factors (and area_factors) for tracking
   write_log <- function(x,file,calibration_step) {
@@ -159,8 +159,7 @@ update_calib<-function(gdx_file, calib_accuracy=0.01, damping_factor=0.98, calib
       getNames(calib_best) <- NULL
       getYears(calib_best) <- NULL
       calib_factor_time <- time_series(calib_best)
-      calib_reward <- setNames(calib_factor_time,"reward")
-      calib_reward[,,] <- 0
+      calib_reward <- get_rewardcalib(gdx_file,calib_factor_time)
       calib_best_full <- mbind(setNames(calib_factor_time,"cost"),setNames(calib_reward,"reward"))
       calib_best_full[is.na(calib_best_full)] <- 1
       
@@ -181,8 +180,7 @@ update_calib<-function(gdx_file, calib_accuracy=0.01, damping_factor=0.98, calib
 }else{
 
   calib_factor_time <- time_series(calib_factor)
-  calib_reward <- setNames(calib_factor_time,"reward")
-  calib_reward[,,] <- 0
+  calib_reward <- get_rewardcalib(gdx_file,calib_factor_time)
   calib_full <- mbind(setNames(calib_factor_time,"cost"),setNames(calib_reward,"reward"))
   calib_full[is.na(calib_full)] <- 1
   comment <- c(" description: Regional land conversion cost calibration file",
