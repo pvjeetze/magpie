@@ -37,11 +37,11 @@ s42_env_flow_base_fraction         Fraction of available water that is reserved 
 *                                                                   EFR_protection_policy.csv)
 s42_env_flow_fraction              Fraction of available water that is reserved for under protection policies (1) / 0.2 /
 s42_pumping                        Switch to activate pumping cost settings (1) / 0 /
-s42_multiplier_startyear           Year from which pumping costs multiplier will be implemented (1) / 0 /
+s42_multiplier_startyear           Year from which pumping costs multiplier will be implemented (1) / 1995 /
 s42_multiplier                     multiplier to change pumping costs for sensitivity analysis takes numeric values (1)  / 0 /
 ;
 
-$setglobal c42_watdem_scenario  cc
+$setglobal c42_watdem_scenario  nocc_hist
 *   options:  cc        (climate change)
 *             nocc      (no climate change)
 *             nocc_hist (no climate change after year defined by sm_fix_cc)
