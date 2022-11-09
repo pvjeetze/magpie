@@ -62,12 +62,11 @@ getCalibFactor <- function(gdx_file, mode="cost") {
   require(magclass)
   require(magpie4)
   require(gdx)
-  #y <- 2015
-  magpie <- setYears(land(gdx_file)[, 2015, "crop"],NULL) #- setYears(land(gdx_file)[, 1995, "crop"],NULL)
-  #data <- dimSums(readGDX(gdx_file, "f10_land")[, y, "crop"], dim = 1.2)
-  hist <- getHistCrop()
+  y <- 2015
+  magpie <- setYears(land(gdx_file)[, y, "crop"],NULL)
+  hist <- dimSums(readGDX(gdx_file, "f10_land")[, , "crop"], dim = 1.2)
+  data <- setYears(hist[, y, "crop"],NULL)
   shrLost <- (setYears(hist[getRegions(magpie),2015,],NULL) - setYears(hist[getRegions(magpie),1995,],NULL)) / setYears(hist[getRegions(magpie),1995,],NULL)
-  data <- setYears(hist[getRegions(magpie),2015,],NULL) # - setYears(hist[getRegions(magpie),1995,],NULL))
   if(nregions(magpie)!=nregions(data) | !all(getRegions(magpie) %in% getRegions(data))) {
     stop("Regions in MAgPIE do not agree with regions in reference calibration area data set!")
   }
@@ -87,6 +86,7 @@ getCalibFactor <- function(gdx_file, mode="cost") {
     getNames(out) <- NULL
     getYears(out) <- NULL
 
+    #only reward only if share of cropland lost between 1995 and 2015 exceeds a certain threshold. Otherwise set to 0.
     out[which(shrLost > -0.05,arr.ind = T)] <- 0
     out[which(out < 0,arr.ind = T)] <- 0
   }
