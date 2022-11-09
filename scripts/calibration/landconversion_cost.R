@@ -61,7 +61,7 @@ getCalibFactor <- function(gdx_file, mode = "cost", calib_accuracy = 0.05) {
   require(magclass)
   require(magpie4)
   require(gdx)
-  yrs <- paste0("y", seq(2000, 2015, 5))
+  yrs <- seq(2000, 2015, 5)
   magpie <- land(gdx_file)[, yrs, "crop"]
   hist <- dimSums(readGDX(gdx_file, "f10_land")[, , "crop"], dim = 1.2)
   data <- hist[, yrs, "crop"]
@@ -109,11 +109,11 @@ time_series_reward <- function(calib_factor) {
   return(out2)
 }
 
-getHistCrop <- function() {
-  rep <- read.report("input/validation.mif", as.list = FALSE)
-  crop <- collapseNames(rep[, , "historical.FAO_crop_past.Resources|Land Cover|+|Cropland (million ha)"])
-  return(crop)
-}
+# getHistCrop <- function() {
+#   rep <- read.report("input/validation.mif", as.list = FALSE)
+#   crop <- collapseNames(rep[, , "historical.FAO_crop_past.Resources|Land Cover|+|Cropland (million ha)"])
+#   return(crop)
+# }
 
 # get_rewardcalib <- function(gdx_file,calib_factor) {
 #   require(magclass)
@@ -149,7 +149,7 @@ update_calib <- function(gdx_file, calib_accuracy = 0.05, damping_factor = 0.98,
 
   ### -> in case it is the first step, it forces the initial factors to be equal to 1
   if (file.exists(calib_file)) {
-    old_calib <- magpiesort(read.magpie(calib_file))[,1995, invert=TRUE]
+    old_calib <- magpiesort(read.magpie(calib_file))[, seq(2000, 2015, 5), ]
   } else {
     old_calib <- new.magpie(cells_and_regions = getCells(calib_divergence_cost), years = seq(2000, 2015, 5), names = c("cost", "reward"), fill = 1)
   }
