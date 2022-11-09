@@ -239,7 +239,7 @@ update_calib<-function(gdx_file, calib_accuracy=0.01, damping_factor=0.98, calib
     #write.magpie(round(setYears(calib_best_full,NULL),3), calib_file, comment = comment)
     write.magpie(round(calib_best_full,3), calib_file, comment = comment)
     
-    write_log(calib_best,     "land_conversion_cost_calib_factor.cs3"     , "best")
+    write_log(calib_best_full,     "land_conversion_cost_calib_factor.cs3"     , "best")
 ####
   return(TRUE)
 }else{
