@@ -35,28 +35,6 @@ calibration_run <- function(putfolder, calib_magpie_name, logoption = 3) {
 
 # get ratio between modelled area and reference area
 
-# get_areacalib <- function(gdx_file) {
-#   require(magclass)
-#   require(magpie4)
-#   require(gdx)
-#  yrs<- 2015
-#   magpie <- setYears(land(gdx_file)[, 2015, "crop"],NULL) - setYears(land(gdx_file)[, 1995, "crop"],NULL)
-#   #data <- dimSums(readGDX(gdx_file, "f10_land")[, yrs, "crop"], dim = 1.2)
-#   hist <- getHistCrop()
-#   data <- (setYears(hist[getRegions(magpie),2015,],NULL) - setYears(hist[getRegions(magpie),1995,],NULL)) / setYears(hist[getRegions(magpie),1995,],NULL)
-#   data <- (setYears(hist[getRegions(magpie),2015,],NULL) - setYears(hist[getRegions(magpie),1995,],NULL))
-#   if(nregions(magpie)!=nregions(data) | !all(getRegions(magpie) %in% getRegions(data))) {
-#     stop("Regions in MAgPIE do not agree with regions in reference calibration area data set!")
-#   }
-#   out <- magpie/data
-#   out[out==0] <- 1
-#   out[is.na(out)] <- 1
-#   getNames(out) <- NULL
-#   getYears(out) <- NULL
-#
-#   return(magpiesort(out))
-# }
-#
 getCalibFactor <- function(gdx_file, mode = "cost", calib_accuracy = 0.05) {
   require(magclass)
   require(magpie4)
@@ -108,30 +86,6 @@ time_series_reward <- function(calib_factor) {
   out2[, seq(2020, 2150, by = 5), ] <- calib_factor[, nyears(calib_factor), ]
   return(out2)
 }
-
-# getHistCrop <- function() {
-#   rep <- read.report("input/validation.mif", as.list = FALSE)
-#   crop <- collapseNames(rep[, , "historical.FAO_crop_past.Resources|Land Cover|+|Cropland (million ha)"])
-#   return(crop)
-# }
-
-# get_rewardcalib <- function(gdx_file,calib_factor) {
-#   require(magclass)
-#   require(magpie4)
-#   require(gdx)
-#   data <- dimSums(readGDX(gdx_file, "f10_land")[, , "crop"], dim = 1.2)
-#   hist <- (setYears(data[,2015,],NULL) - setYears(data[,1995,],NULL)) / setYears(data[,1995,],NULL)
-#   getYears(hist) <- NULL
-#   getNames(hist) <- NULL
-#
-#   out <- calib_factor
-#   out[,,] <- 0
-#   sel <- which(calib_factor > 1 & hist < 0,arr.ind = T)
-#   out[sel]   <- (calib_factor[sel] - 1)^2
-#
-#   return(magpiesort(out))
-# }
-
 
 # Calculate the correction factor and save it
 update_calib <- function(gdx_file, calib_accuracy = 0.05, damping_factor = 0.98, calib_file, crop_max = 2.5, crop_min = 0.8, calibration_step = "", n_maxcalib = 20, best_calib = TRUE) {
