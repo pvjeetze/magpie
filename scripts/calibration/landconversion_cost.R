@@ -103,7 +103,7 @@ time_series_cost <- function(calib_factor) {
 }
 
 time_series_reward <- function(calib_factor) {
-  out2 <- new.magpie(getRegions(calib_factor), years = c(seq(1995, 2150, by = 5)), fill = 1)
+  out2 <- new.magpie(getRegions(calib_factor), years = c(seq(1995, 2150, by = 5)), fill = 0)
   out2[, seq(2000, 2015, by = 5), ] <- calib_factor
   out2[, seq(2020, 2150, by = 5), ] <- calib_factor[, nyears(calib_factor), ]
   return(out2)
@@ -150,12 +150,23 @@ update_calib <- function(gdx_file, calib_accuracy = 0.05, damping_factor = 0.98,
   ### -> in case it is the first step, it forces the initial factors to be equal to 1
   if (file.exists(calib_file)) {
     old_calib <- magpiesort(read.magpie(calib_file))[, seq(2000, 2015, 5), ]
+    start_flag <- FALSE
   } else {
     old_calib <- new.magpie(cells_and_regions = getCells(calib_divergence_cost), years = seq(2000, 2015, 5), names = c("cost", "reward"), fill = 1)
+    start_flag <- TRUE
   }
 
   calib_factor_cost <- setNames(old_calib[, , "cost"], NULL) * (damping_factor * (calib_correction_cost - 1) + 1)
   calib_factor_reward <- setNames(old_calib[, , "reward"], NULL) * (damping_factor * (calib_correction_reward))
+
+  if(!start_flag){
+  # stick to old calibration factors where accuracy was reached
+  cost_acc_reached <- calib_divergence_cost <= calib_accuracy
+  calib_factor_cost[cost_acc_reached] <- setNames(old_calib[, , "cost"], NULL)[cost_acc_reached]
+
+  reward_acc_reached <- calib_divergence_reward <= calib_accuracy
+  calib_factor_reward[reward_acc_reached] <- setNames(old_calib[, , "reward"], NULL)[reward_acc_reached]
+  }
 
   if (!is.null(crop_max)) {
     above_limit <- (calib_factor_cost > crop_max)

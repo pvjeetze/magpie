@@ -37,7 +37,7 @@ cfg$sequential <- TRUE
 # yield calibration
 # ------------------
 
-cfg$recalibrate <- FALSE
+cfg$recalibrate <- TRUE
 # Up to which accuracy shall be recalibrated?
 cfg$calib_accuracy <- 0.05         # def = 0.05
 # What is the maximum number of iterations if the precision goal is not reached?
@@ -53,10 +53,10 @@ cfg$recalibrate_landconversion_cost <- TRUE
 cfg$calib_accuracy_landconversion_cost <- 0.05         # def = 0.05
 # What is the maximum number of iterations if the precision goal is not reached?
 cfg$calib_maxiter_landconversion_cost <- 50          # def = 20
-cfg$best_calib_landconversion_cost <- FALSE			# def = TRUE
+cfg$best_calib_landconversion_cost <- TRUE			# def = TRUE
 
 # set upper limit for cropland calibration factor
-cfg$crop_calib_max_landconversion_cost <- 2.5            # def= 2.5
+cfg$crop_calib_max_landconversion_cost <- 3            # def= 2.5
 # set lower limit for cropland calibration factor
 cfg$crop_calib_min_landconversion_cost <- 0.5            # def= 0.5
 
