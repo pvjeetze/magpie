@@ -10,7 +10,7 @@
 # ***              based on a pre run of magpie                     ***
 # *********************************************************************
 
-calibration_run <- function(putfolder, calib_magpie_name, logoption = 3) {
+calibration_run <- function(putfolder, calib_magpie_name, logoption = 3, s_use_gdx = 0) {
   require(lucode2)
 
   # create putfolder for the calib run
@@ -25,7 +25,7 @@ calibration_run <- function(putfolder, calib_magpie_name, logoption = 3) {
     stop(paste("Unable to create", paste(calib_magpie_name, ".gms", sep = "")))
   }
   lucode2::manipulateConfig(paste(calib_magpie_name, ".gms", sep = ""), c_timesteps = "calib")
-  lucode2::manipulateConfig(paste(calib_magpie_name, ".gms", sep = ""), s_use_gdx = 0)
+  lucode2::manipulateConfig(paste(calib_magpie_name, ".gms", sep = ""), s_use_gdx = s_use_gdx)
   file.copy(paste(calib_magpie_name, ".gms", sep = ""), putfolder)
 
   # execute calibration run
@@ -275,15 +275,23 @@ calibrate_magpie <- function(n_maxcalib = 20,
   } else {
     if (file.exists(calib_file)) cat(paste0("\nStarting land conversion cost calibration from existing values\n")) else cat(paste0("\nStarting land conversion cost calibration from default values\n"))
   }
+  
   for (i in 1:n_maxcalib) {
-    cat(paste("\nStarting land conversion cost calibration iteration", i, "\n"))
-    calibration_run(putfolder = putfolder, calib_magpie_name = calib_magpie_name, logoption = logoption)
+    if (i == 1) s_use_gdx <- 0
+    cat(paste("\nStarting land conversion cost calibration iteration", i, "with s_use_gdx =",s_use_gdx, "\n"))
+    calibration_run(putfolder = putfolder, calib_magpie_name = calib_magpie_name, logoption = logoption, s_use_gdx = s_use_gdx)
     if (debug) file.copy(paste0(putfolder, "/fulldata.gdx"), paste0("fulldata_calib", i, ".gdx"))
     done <- update_calib(gdx_file = paste0(putfolder, "/fulldata.gdx"), calib_accuracy = calib_accuracy, crop_max = crop_max, crop_min = crop_min, damping_factor = damping_factor, calib_file = calib_file, calibration_step = i, n_maxcalib = n_maxcalib, best_calib = best_calib)
-    if (done) {
+    if (done & s_use_gdx == 2) {
+      s_use_gdx <- 0
+      next
+    } else if (done & s_use_gdx == 0) {
       break
+    } else {
+      s_use_gdx <- 2
     }
   }
+  
 
   # delete calib_magpie_gms in the main folder
   unlink(paste0(calib_magpie_name, ".*"))
