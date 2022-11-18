@@ -68,15 +68,43 @@ getCalibFactor <- function(gdx_file, mode = "cost", calib_accuracy = 0.05) {
   return(magpiesort(out))
 }
 
+# Trajectory of land conversion cost calib factors
+# after 2015 is based on the World Governance Index (WGI)
 
 time_series_cost <- function(calib_factor) {
-  out2 <- new.magpie(getRegions(calib_factor), years = c(1995, 2015, seq(2050, 2150, by = 5)), fill = 1)
+
+  out2 <- new.magpie(getRegions(calib_factor), years = c(1995, 2015, seq(2050, 2150, by = 5)),
+                     names = paste0("SSP",1:5), fill = 1)
+  # historical period
   out2[, 2015, ] <- calib_factor
   out2 <- time_interpolate(out2, seq(2000, 2015, by = 5), integrate_interpolated_years = T)
-  out2050 <- calib_factor
-  out2050[out2050 < 1] <- 1
-  out2[, seq(2050, 2150, by = 5), ] <- out2050
+
+  # Read WGI
+  wgi <- magpiesort(read.magpie("input/f09_governance_indicator.cs3"))
+  # threshold for strong governance
+  wgi[wgi >= 0.75] <- 0.75
+
+  # separate regions
+  strong_gov_reg_2015 <- getRegions(out2)[wgi[,2015, 1] >= 0.75]
+  other_gov_reg_2015 <- getRegions(out2)[wgi[,2015, 1] < 0.75]
+
+  # mean calib factor in regions with strong governance
+  strong_gov_calib_factor <- mean(calib_factor[strong_gov2015])
+
+  # Define calib factors in 2050 based on WGI
+  out2050 <- new.magpie(getRegions(out2), years = 2050,
+                     names = paste0("SSP",1:5), fill = calib_factor)
+  calib_factor_other_2050 <- strong_gov_calib_factor * (wgi[other_gov_reg_2015, 2050,] / 0.75)
+  out2050[other_gov_reg_2015,,] <- calib_factor_other_2050[other_gov_reg_2015,,]
+  out2[,2050,] <- out2050
+  # converge from 2015 to 2050
   out2 <- time_interpolate(out2, seq(2020, 2050, by = 5), integrate_interpolated_years = T)
+
+  # Evolution of calib factors after 2050 follows WGI trajectory
+  gov_evo_after_2050 <- (wgi[other_gov_reg_2015,seq(2055, 2150, by = 5),] / 0.75)
+  out2[other_gov_reg_2015, seq(2055, 2150, by = 5), ] <- strong_gov_calib_factor * gov_evo_after_2050
+  out2[strong_gov_reg_2015, seq(2055, 2150, by = 5), ] <- out2050[strong_gov_reg_2015,,]
+
   return(out2)
 }
 
