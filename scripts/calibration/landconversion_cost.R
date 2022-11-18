@@ -79,7 +79,7 @@ time_series_cost <- function(calib_factor) {
   out2[, 2015, ] <- calib_factor
   out2 <- time_interpolate(out2, seq(2000, 2015, by = 5), integrate_interpolated_years = T)
 
-  # Read WGI
+  # read WGI
   wgi <- magpiesort(read.magpie("input/f09_governance_indicator.cs3"))
   # threshold for strong governance
   wgi[wgi >= 0.75] <- 0.75
@@ -91,7 +91,7 @@ time_series_cost <- function(calib_factor) {
   # mean calib factor in regions with strong governance
   strong_gov_calib_factor <- mean(calib_factor[strong_gov2015])
 
-  # Define calib factors in 2050 based on WGI
+  # define calib factors in 2050 based on WGI
   out2050 <- new.magpie(getRegions(out2), years = 2050,
                      names = paste0("SSP",1:5), fill = calib_factor)
   calib_factor_other_2050 <- strong_gov_calib_factor * (wgi[other_gov_reg_2015, 2050,] / 0.75)
@@ -100,7 +100,7 @@ time_series_cost <- function(calib_factor) {
   # converge from 2015 to 2050
   out2 <- time_interpolate(out2, seq(2020, 2050, by = 5), integrate_interpolated_years = T)
 
-  # Evolution of calib factors after 2050 follows WGI trajectory
+  # evolution of calib factors after 2050 follows WGI trajectory
   gov_evo_after_2050 <- (wgi[other_gov_reg_2015,seq(2055, 2150, by = 5),] / 0.75)
   out2[other_gov_reg_2015, seq(2055, 2150, by = 5), ] <- strong_gov_calib_factor * gov_evo_after_2050
   out2[strong_gov_reg_2015, seq(2055, 2150, by = 5), ] <- out2050[strong_gov_reg_2015,,]
@@ -275,7 +275,7 @@ calibrate_magpie <- function(n_maxcalib = 20,
   } else {
     if (file.exists(calib_file)) cat(paste0("\nStarting land conversion cost calibration from existing values\n")) else cat(paste0("\nStarting land conversion cost calibration from default values\n"))
   }
-  
+
   for (i in 1:n_maxcalib) {
     if (i == 1) s_use_gdx <- 0
     cat(paste("\nStarting land conversion cost calibration iteration", i, "with s_use_gdx =",s_use_gdx, "\n"))
@@ -291,7 +291,7 @@ calibrate_magpie <- function(n_maxcalib = 20,
       s_use_gdx <- 2
     }
   }
-  
+
 
   # delete calib_magpie_gms in the main folder
   unlink(paste0(calib_magpie_name, ".*"))
