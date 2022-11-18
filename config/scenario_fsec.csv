@@ -29,6 +29,7 @@ gms$c30_bioen_water;;;;;;;;;;;;;;;;;;;;;;;;;;;;rainfed;;;;;;;;;;;;
 gms$past;endo_jun13;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 gms$c31_past_suit_scen;ssp245;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;ssp126;ssp126;ssp245;ssp370;ssp460;ssp585
 gms$c34_urban_scenario;;;;SSP1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+gms$c39_cost_scenario;SSP2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;SSP1;SSP2;SSP3;SSP4;SSP5
 gms$s42_watdem_nonagr_scenario;;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 gms$c42_env_flow_policy;off;;;;;;;;;;;;;;;;;;;;;;;;;;;on;;;;;;;;;;;;
 gms$c32_aff_policy;;;;;;;;;;;;;;;;;;;;;;;;ndc;;;;;;;;;;;;;;;;

@@ -8,4 +8,7 @@
 sets
 	type39 Cost type
 		/ cost, reward /
+
+	cost_scen39  Land conversion cost scenarios
+       / SSP1, SSP2, SSP3, SSP4, SSP5 /
 ;

@@ -5,6 +5,8 @@
 *** |  MAgPIE License Exception, version 1.0 (see LICENSE file).
 *** |  Contact: magpie@pik-potsdam.de
 
+$setglobal c39_cost_scenario  SSP2
+
 scalars
  s39_cost_establish_crop   	   Cost for cropland expansion before calibration (USD05MER per hectare) / 10000 /
  s39_reward_crop_reduction     Reward for cropland reduction in calibration (USD05MER per hectare) / 6000 /
@@ -15,9 +17,9 @@ scalars
 ;
 
 $onEmpty
-table f39_calib(t_all,i,type39) Calibration factor for costs of cropland expansion (1)
+table f39_calib(t_all,i,type39,cost_scen39) Calibration factor for costs of cropland expansion (1)
 $ondelim
-$if exist "./modules/39_landconversion/input/f39_calib.csv" $include "./modules/39_landconversion/input/f39_calib.csv"
+$if exist "./modules/39_landconversion/input/f39_calib.cs3" $include "./modules/39_landconversion/input/f39_calib.cs3"
 $offdelim
 ;
 $offEmpty

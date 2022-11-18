@@ -89,7 +89,7 @@ time_series_cost <- function(calib_factor) {
   other_gov_reg_2015 <- getRegions(out2)[wgi[,2015, 1] < 0.75]
 
   # mean calib factor in regions with strong governance
-  strong_gov_calib_factor <- mean(calib_factor[strong_gov2015])
+  strong_gov_calib_factor <- mean(calib_factor[strong_gov_reg_2015])
 
   # define calib factors in 2050 based on WGI
   out2050 <- new.magpie(getRegions(out2), years = 2050,
@@ -109,7 +109,8 @@ time_series_cost <- function(calib_factor) {
 }
 
 time_series_reward <- function(calib_factor) {
-  out2 <- new.magpie(getRegions(calib_factor), years = c(1995, seq(2015, 2150, by = 5)), fill = 0)
+  out2 <- new.magpie(getRegions(calib_factor), years = c(1995, seq(2015, 2150, by = 5)),
+                     names = paste0("SSP",1:5), fill = 0)
   out2[, seq(2015, 2150, by = 5), ] <- calib_factor
   out2 <- time_interpolate(out2, seq(2000, 2015, by = 5), integrate_interpolated_years = T)
   return(out2)
@@ -213,7 +214,8 @@ update_calib <- function(gdx_file, calib_accuracy = 0.01, damping_factor = 0.98,
       getYears(calib_reward_best) <- NULL
       calib_reward_best <- time_series_reward(calib_reward_best)
 
-      calib_best_full <- mbind(setNames(calib_cost_best, "cost"), setNames(calib_reward_best, "reward"))
+      calib_best_full <- mbind(add_dimension(calib_factor_cost, dim = 3.1, nm = "cost"),
+                               add_dimension(calib_factor_reward, dim = 3.1, nm = "reward"))
       calib_best_full[is.na(calib_best_full)] <- 1
 
       comment <- c(
@@ -226,8 +228,8 @@ update_calib <- function(gdx_file, calib_accuracy = 0.01, damping_factor = 0.98,
       # write.magpie(round(setYears(calib_best_full,NULL),3), calib_file, comment = comment)
       write.magpie(round(calib_best_full, 3), calib_file, comment = comment)
 
-      write_log(calib_best_full[, 2015, "cost"], "land_conversion_cost_calib_factor.cs3", "best")
-      write_log(calib_best_full[, 2015, "reward"], "land_conversion_reward_calib_factor.cs3", "best")
+      write_log(calib_best_full[, 2015, "cost.SSP2"], "land_conversion_cost_calib_factor.cs3", "best")
+      write_log(calib_best_full[, 2015, "reward.SSP2"], "land_conversion_reward_calib_factor.cs3", "best")
       ####
       return(TRUE)
     } else {
@@ -237,7 +239,8 @@ update_calib <- function(gdx_file, calib_accuracy = 0.01, damping_factor = 0.98,
     calib_factor_cost <- time_series_cost(calib_factor_cost)
     calib_factor_reward <- time_series_reward(calib_factor_reward)
 
-    calib_full <- mbind(setNames(calib_factor_cost, "cost"), setNames(calib_factor_reward, "reward"))
+    calib_full <- mbind(add_dimension(calib_factor_cost, dim = 3.1, nm = "cost"),
+                        add_dimension(calib_factor_reward, dim = 3.1, nm = "reward"))
     calib_full[is.na(calib_full)] <- 1
 
     comment <- c(
@@ -261,7 +264,7 @@ calibrate_magpie <- function(n_maxcalib = 20,
                              crop_min = 0.2,
                              calib_magpie_name = "magpie_calib",
                              damping_factor = 0.98,
-                             calib_file = "modules/39_landconversion/input/f39_calib.csv",
+                             calib_file = "modules/39_landconversion/input/f39_calib.cs3",
                              putfolder = "land_conversion_cost_calib_run",
                              data_workspace = NULL,
                              logoption = 3,
