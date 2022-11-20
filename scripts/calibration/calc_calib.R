@@ -64,7 +64,7 @@ get_yieldcalib <- function(gdx_file) {
     return(superAggregate(y,level="reg",aggr_type="mean", na.rm=TRUE))
   }
 
-  y_ini <- prep(readGDX(gdx_file, "i14_yields","i14_yields_calib", 
+  y_ini <- prep(readGDX(gdx_file, "i14_yields","i14_yields_calib",
                         format = "first_found", react = "silent"))
   y     <- prep(readGDX(gdx_file,"vm_yld")[,,"l"])
 
@@ -91,7 +91,7 @@ update_calib<-function(gdx_file, calib_accuracy=0.1, calibrate_pasture=TRUE,cali
   } else {
     old_calib <- new.magpie(cells_and_regions = getCells(calib_divergence), names = getNames(calib_divergence), fill = 1)
   }
-  
+
   #initial guess equal to 1
   if(calibration_step==1) old_calib[,,] <- 1
 
@@ -130,13 +130,13 @@ update_calib<-function(gdx_file, calib_accuracy=0.1, calibrate_pasture=TRUE,cali
     # the reported and used regional calibration factors can be either the ones of the last iteration,
     # or the "best" based on the iteration value with the lowest standard deviation of regional divergence.
     if (best_calib == TRUE) {
-    
+
       calib_best<-new.magpie(cells_and_regions = getCells(calib_divergence),years = getYears(calib_divergence),names = c("crop","past"))
       divergence_data<-read.magpie("calib_divergence.cs3")
       factors_data<-read.magpie("calib_factor.cs3")
       calib_best[,,"crop"] <- collapseNames(factors_data[,,"crop"][,,which.min(apply(as.array(divergence_data[,,"crop"]),c(3),sd))])
       calib_best[,,"past"] <- collapseNames(factors_data[,,"past"][,,which.min(apply(as.array(divergence_data[,,"past"]),c(3),sd))])
-      
+
     comment <- c(" description: Regional yield calibration file",
                  " unit: -",
                  paste0(" note: Best calibration factor from the run"),

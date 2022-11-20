@@ -128,7 +128,7 @@ getHistCrop <- function() {
 }
 
 # Calculate the correction factor and save it
-update_calib <- function(gdx_file, calib_accuracy = 0.05, damping_factor = 0.96, calib_file, crop_max = 3, crop_min = 0.05, calibration_step = "", n_maxcalib = 40, best_calib = TRUE) {
+update_calib <- function(gdx_file, calib_accuracy = 0.05, damping_factor = 0.96, calib_file, cost_max = 3, cost_min = 0.05, calibration_step = "", n_maxcalib = 40, best_calib = TRUE) {
   require(magclass)
   require(magpie4)
   if (!(modelstat(gdx_file)[1, 1, 1] %in% c(1, 2, 7))) stop("Calibration run infeasible")
@@ -153,10 +153,10 @@ update_calib <- function(gdx_file, calib_accuracy = 0.05, damping_factor = 0.96,
   calib_factor_cost <- setNames(old_calib[, , "cost"][, , 1], NULL) * (damping_factor * (calib_correction_cost - 1) + 1)
   calib_factor_reward <- setNames(old_calib[, , "reward"][, , 1], NULL) * (damping_factor * (calib_correction_reward))
 
-  # if reward exists, start calibration with crop_max instead of 1
-  if (start_flag & !is.null(crop_max)) {
+  # if reward exists, start cost calibration with cost_max instead of 1
+  if (start_flag & !is.null(cost_max)) {
     reward_exists <- (calib_factor_reward > 0)
-    calib_factor_reward[reward_exists] <- crop_max
+    calib_factor_cost[reward_exists] <- cost_max
   }
 
   if (!start_flag) {
@@ -173,23 +173,23 @@ update_calib <- function(gdx_file, calib_accuracy = 0.05, damping_factor = 0.96,
     calib_factor_cost[set_to_one] <- 1
   }
 
-  if (!is.null(crop_max)) {
-    above_limit <- (calib_factor_cost > crop_max)
-    calib_factor_cost[above_limit] <- crop_max
+  if (!is.null(cost_max)) {
+    above_limit <- (calib_factor_cost > cost_max)
+    calib_factor_cost[above_limit] <- cost_max
     calib_divergence_cost[getRegions(calib_factor_cost), , ][above_limit] <- 0
   }
 
-  if (!is.null(crop_min)) {
-    below_limit <- (calib_factor_cost < crop_min)
-    calib_factor_cost[below_limit] <- crop_min
+  if (!is.null(cost_min)) {
+    below_limit <- (calib_factor_cost < cost_min)
+    calib_factor_cost[below_limit] <- cost_min
     calib_divergence_cost[getRegions(calib_factor_cost), , ][below_limit] <- 0
   }
 
   # # Special rule for IND to avoid very strong cropland increase; Only executed if IND exists in the regions
   # sub <- c("IND")
   # if (all(sub %in% getRegions(calib_factor_cost))) {
-  #   below_limit <- (calib_factor_cost[sub, , ] < crop_max)
-  #   calib_factor_cost[sub, , ][below_limit] <- crop_max
+  #   below_limit <- (calib_factor_cost[sub, , ] < cost_max)
+  #   calib_factor_cost[sub, , ][below_limit] <- cost_max
   #   calib_divergence_cost[sub, , ][below_limit] <- 0
   # }
 
@@ -279,8 +279,8 @@ update_calib <- function(gdx_file, calib_accuracy = 0.05, damping_factor = 0.96,
 calibrate_magpie <- function(n_maxcalib = 40,
                              restart = TRUE,
                              calib_accuracy = 0.05,
-                             crop_max = 3,
-                             crop_min = 0.05,
+                             cost_max = 3,
+                             cost_min = 0.05,
                              calib_magpie_name = "magpie_calib",
                              damping_factor = 0.96,
                              calib_file = "modules/39_landconversion/input/f39_calib.cs3",
@@ -303,7 +303,7 @@ calibrate_magpie <- function(n_maxcalib = 40,
     cat(paste("\nStarting land conversion cost calibration iteration", i, "with s_use_gdx =", s_use_gdx, "\n"))
     calibration_run(putfolder = putfolder, calib_magpie_name = calib_magpie_name, logoption = logoption, s_use_gdx = s_use_gdx)
     if (debug) file.copy(paste0(putfolder, "/fulldata.gdx"), paste0("fulldata_calib", i, ".gdx"))
-    done <- update_calib(gdx_file = paste0(putfolder, "/fulldata.gdx"), calib_accuracy = calib_accuracy, crop_max = crop_max, crop_min = crop_min, damping_factor = damping_factor, calib_file = calib_file, calibration_step = i, n_maxcalib = n_maxcalib, best_calib = best_calib)
+    done <- update_calib(gdx_file = paste0(putfolder, "/fulldata.gdx"), calib_accuracy = calib_accuracy, cost_max = cost_max, cost_min = cost_min, damping_factor = damping_factor, calib_file = calib_file, calibration_step = i, n_maxcalib = n_maxcalib, best_calib = best_calib)
     if (done & s_use_gdx == 2) {
       s_use_gdx <- 0
       next
