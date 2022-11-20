@@ -153,6 +153,11 @@ update_calib <- function(gdx_file, calib_accuracy = 0.05, damping_factor = 0.96,
   calib_factor_cost <- setNames(old_calib[, , "cost"][, , 1], NULL) * (damping_factor * (calib_correction_cost - 1) + 1)
   calib_factor_reward <- setNames(old_calib[, , "reward"][, , 1], NULL) * (damping_factor * (calib_correction_reward))
 
+  # if reward exists, start calibration with crop_max instead of 1
+  if (start_flag & !is.null(crop_max)) {
+    reward_exists <- (calib_factor_reward > 0)
+    calib_factor_reward[reward_exists] <- crop_max
+  }
 
   if (!start_flag) {
     # stick to old calibration factors where accuracy was reached
@@ -162,10 +167,10 @@ update_calib <- function(gdx_file, calib_accuracy = 0.05, damping_factor = 0.96,
     reward_acc_reached <- calib_divergence_reward <= calib_accuracy
     calib_factor_reward[reward_acc_reached] <- setNames(old_calib[, , "reward"][, , 1], NULL)[reward_acc_reached]
 
-    # don't reduce cost factor where there is a reward
+    # make sure cost factor is not <1 where there is a reward
     reward_exists <- (calib_factor_reward > 0)
-    keep_cost_factor <- reward_exists & (calib_factor_cost < setNames(old_calib[, , "cost"][, , 1], NULL))
-    calib_factor_cost[keep_cost_factor] <- setNames(old_calib[, , "cost"][, , 1], NULL)[keep_cost_factor]
+    set_to_one <- reward_exists & (calib_factor_cost < 1)
+    calib_factor_cost[set_to_one] <- 1
   }
 
   if (!is.null(crop_max)) {
