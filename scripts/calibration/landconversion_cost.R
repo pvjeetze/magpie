@@ -76,11 +76,11 @@ time_series_cost <- function(calib_factor) {
     years = c(1995, 2015, seq(2050, 2150, by = 5)),
     names = paste0("SSP", 1:5), fill = 1
   )
-  # historical period
+  ### historical period
   out2[, 2015, ] <- calib_factor
   out2 <- time_interpolate(out2, seq(2000, 2015, by = 5), integrate_interpolated_years = T)
 
-  # read WGI
+  ### read WGI
   wgi <- magpiesort(read.magpie("input/f09_governance_indicator.cs3"))
   # threshold for strong governance
   wgi[wgi >= 0.75] <- 0.75
@@ -94,7 +94,7 @@ time_series_cost <- function(calib_factor) {
   # regions where WGI < 0.75 and calib factor < strong_gov_calib_factor
   other_gov_reg_2015 <- getRegions(out2)[wgi[, 2015, 1] < 0.75 & calib_factor < strong_gov_calib_factor]
 
-  # define calib factors in 2050 based on WGI
+  ### define calib factors in 2050 based on WGI
   out2050 <- new.magpie(getRegions(out2),
     years = 2050,
     names = paste0("SSP", 1:5), fill = calib_factor
@@ -105,7 +105,7 @@ time_series_cost <- function(calib_factor) {
   # converge from 2015 to 2050
   out2 <- time_interpolate(out2, seq(2020, 2050, by = 5), integrate_interpolated_years = T)
 
-  # evolution of calib factors after 2050 follows WGI trajectory
+  ### evolution of calib factors after 2050 follows WGI trajectory
   gov_evo_after_2050 <- (wgi[other_gov_reg_2015, seq(2055, 2150, by = 5), ] / 0.75)
   out2[other_gov_reg_2015, seq(2055, 2150, by = 5), ] <- strong_gov_calib_factor * gov_evo_after_2050
   out2[strong_gov_reg_2015, seq(2055, 2150, by = 5), ] <- out2050[strong_gov_reg_2015, , ]
@@ -162,11 +162,12 @@ update_calib <- function(gdx_file, calib_accuracy = 0.05, damping_factor = 0.96,
   }
 
   if (!start_flag) {
-    # stick to old calibration factors where accuracy was reached
-    cost_acc_reached <- calib_divergence_cost <= calib_accuracy
+    # use calibration factors where accuracy was reached
+    # use stricter divergence threshold in first 5 calibration_step steps
+    cost_acc_reached <- calib_divergence_cost <= ifelse(calibration_step < 5, 0.01, calib_accuracy)
     calib_factor_cost[cost_acc_reached] <- setNames(old_calib[, , "cost"][, , 1], NULL)[cost_acc_reached]
 
-    reward_acc_reached <- calib_divergence_reward <= calib_accuracy
+    reward_acc_reached <- calib_divergence_reward <= ifelse(calibration_step < 5, 0.01, calib_accuracy)
     calib_factor_reward[reward_acc_reached] <- setNames(old_calib[, , "reward"][, , 1], NULL)[reward_acc_reached]
 
     # make sure cost factor is not <1 where there is a reward
@@ -186,14 +187,6 @@ update_calib <- function(gdx_file, calib_accuracy = 0.05, damping_factor = 0.96,
     calib_factor_cost[below_limit] <- cost_min
     calib_divergence_cost[getRegions(calib_factor_cost), , ][below_limit] <- 0
   }
-
-  # # Special rule for IND to avoid very strong cropland increase; Only executed if IND exists in the regions
-  # sub <- c("IND")
-  # if (all(sub %in% getRegions(calib_factor_cost))) {
-  #   below_limit <- (calib_factor_cost[sub, , ] < cost_max)
-  #   calib_factor_cost[sub, , ][below_limit] <- cost_max
-  #   calib_divergence_cost[sub, , ][below_limit] <- 0
-  # }
 
   ### write down current calib factors (and area_factors) for tracking
   write_log <- function(x, file, calibration_step) {
