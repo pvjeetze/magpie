@@ -115,11 +115,12 @@ time_series_cost <- function(calib_factor) {
 
 time_series_reward <- function(calib_factor) {
   out2 <- new.magpie(getRegions(calib_factor),
-    years = c(1995, seq(2015, 2150, by = 5)),
+    years = c(1995, 2015, seq(2050, 2150, by = 5)),
     names = paste0("SSP", 1:5), fill = 0
   )
-  out2[, seq(2015, 2150, by = 5), ] <- calib_factor
+  out2[, 2015, ] <- calib_factor
   out2 <- time_interpolate(out2, seq(2000, 2015, by = 5), integrate_interpolated_years = T)
+  out2 <- time_interpolate(out2, seq(2020, 2050, by = 5), integrate_interpolated_years = T)
   return(out2)
 }
 
