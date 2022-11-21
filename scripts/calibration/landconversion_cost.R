@@ -85,13 +85,14 @@ time_series_cost <- function(calib_factor) {
   # threshold for strong governance
   wgi[wgi >= 0.75] <- 0.75
 
-  # separate regions
-  strong_gov_reg_2015 <- getRegions(out2)[wgi[, 2015, 1] >= 0.75]
-  other_gov_reg_2015 <- getRegions(out2)[wgi[, 2015, 1] < 0.75]
-
-  # calib factor in regions with strong governance
+  ### separate regions
+  # calib factor in regions with strong governance (WGI >= 0.75)
   # (median is robust against extremes)
-  strong_gov_calib_factor <- median(calib_factor[strong_gov_reg_2015])
+  strong_gov_calib_factor <- median(calib_factor[wgi[, 2015, 1] >= 0.75])
+  # regions where WGI >= 0.75 or calib factor > strong_gov_calib_factor
+  strong_gov_reg_2015 <- getRegions(out2)[wgi[, 2015, 1] >= 0.75 | calib_factor > strong_gov_calib_factor]
+  # regions where WGI < 0.75 and calib factor < strong_gov_calib_factor
+  other_gov_reg_2015 <- getRegions(out2)[wgi[, 2015, 1] < 0.75 & calib_factor < strong_gov_calib_factor]
 
   # define calib factors in 2050 based on WGI
   out2050 <- new.magpie(getRegions(out2),
