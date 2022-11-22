@@ -90,7 +90,7 @@ time_series_cost <- function(calib_factor) {
   # (median is robust against extremes)
   strong_gov_calib_factor <- median(calib_factor[wgi[, 2015, 1] >= 0.75])
   # regions where WGI >= 0.75 or calib factor > strong_gov_calib_factor
-  strong_gov_reg_2015 <- getRegions(out2)[wgi[, 2015, 1] >= 0.75 | calib_factor > strong_gov_calib_factor]
+  strong_gov_reg_2015 <- getRegions(out2)[wgi[, 2015, 1] >= 0.75 | calib_factor >= strong_gov_calib_factor]
   # regions where WGI < 0.75 and calib factor < strong_gov_calib_factor
   other_gov_reg_2015 <- getRegions(out2)[wgi[, 2015, 1] < 0.75 & calib_factor < strong_gov_calib_factor]
 
