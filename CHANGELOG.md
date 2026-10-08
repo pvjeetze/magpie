@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### changed
+- **scripts/output/extra/runSEALSallocation.R** adjusted to SEALS v2.1.1, runs SEALS serially on the local machine if SLURM is not available (`sealsMode`), patches the standard SEALS `run_seals.py` and takes the SEALS base data directory directly (`dirBaseData`)
 - **39_landconversion/calib/input.gms**: default.cfg sets 5904 (4800 * 1.23), so changed the GAMS default to match.
 -  **default.cfg** module 39: Adjusted description for pasture calibration in module 39, adding that `cfg$gms$s39_ignore_calib_past <- 1 ` switches the pasture factors off in GAMS without any recalibration. 
 - **default.cfg** module 39: exposed `s39_reward_past_reduction` and `s39_ignore_calib_past` as configurable (previously hardcoded); rescaled `s39_reward_past_reduction` default from 7380 to 5904 to match cropland's reward/cost ratio; updated stale realization comment describing pasture cost as static
