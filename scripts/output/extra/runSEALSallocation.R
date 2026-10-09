@@ -281,10 +281,12 @@ Sys.chmod(iniLock, mode = "0664")
           inputDataExists <- TRUE
         } else {
           stop("Initial data preparation run (Job ID: ",
-               dependsID, ") did not complete successfully. Status: ", jobState)
+               dependsID, ") did not complete successfully. Status: ", jobState,
+               ". Delete ", file.path(dirProject, "seals.lock"), " to start the input data preparation again.")
         }
       } else {
-        stop("Could not find initial data preparation run (Job ID: ", dependsID, ") in SLURM history")
+        stop("Could not find initial data preparation run (Job ID: ", dependsID, ") in SLURM history. Delete ",
+             file.path(dirProject, "seals.lock"), " to start the input data preparation again.")
       }
     }
   }
