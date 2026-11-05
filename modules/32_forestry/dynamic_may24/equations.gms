@@ -24,6 +24,7 @@ q32_cost_total(i2) .. vm_cost_fore(i2) =e=
                    + v32_cost_hvarea(i2)
                    + sum(cell(i2,j2), v32_land_missing(j2)) * s32_free_land_cost
                    + sum(cell(i2,j2), v32_ndc_area_missing(j2)) * s32_free_land_cost
+                   + sum(cell(i2,j2), v32_prod_surplus(j2)) * im_timber_prod_cost(i2,"wood")
                    ;
 
 *-----------------------------------------------
@@ -244,10 +245,11 @@ q32_hvarea_forestry(j2,harvest32,ac_sub) ..
 ** Timber plantation and other planted forest
 *' Woody biomass production from the harvestable managed-forestry pools (timber plantations and other
 *' planted forest) is calculated by multiplying the area under production with the corresponding growing
-*' stock, divided by the timestep length.
+*' stock, divided by the timestep length. Under exogenous harvest (`s32_hvarea = 1`), wood that cannot
+*' be used or exported is left unused (`v32_prod_surplus`) at the cost of producing it.
 
 q32_prod_forestry(j2)..
-                         sum(kforestry, vm_prod_forestry(j2,kforestry))
+                         sum(kforestry, vm_prod_forestry(j2,kforestry)) + v32_prod_surplus(j2)
                          =e=
                          sum((harvest32,ac_sub), v32_hvarea_forestry(j2,harvest32,ac_sub) * p32_gs_forestry(j2,ac_sub,harvest32))
                          / m_timestep_length_forestry;

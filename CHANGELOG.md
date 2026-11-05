@@ -18,7 +18,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **scripts/output/extra** `disaggregation.R`, `disaggregation_LUH2.R` and `mrdownscale.R`, replaced by the scripts in `scripts/output/downscaling`.
 
 ### fixed
-
+- **32_forestry** With `s32_hvarea = 1`, forced harvest wood that exceeds use and export limits is left unused (`v32_prod_surplus`, costed at wood production cost), which made ForestryExo infeasible in 1995.
+-
 
 
 ## [4.14.2] - 2026-11-03

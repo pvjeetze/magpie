@@ -110,6 +110,7 @@ pcm_land_forestry(j,type32) =  sum(ac, v32_land.l(j,type32,ac));
 v32_land.lo(j,type32,ac) = 0;
 v32_land.up(j,type32,ac) = Inf;
 
+v32_prod_surplus.fx(j) = 0;
 if(s32_hvarea = 0,
 *** zero. Fixed timber plantations. No harvest. No establisment.
   v32_hvarea_forestry.fx(j,harvest32,ac_sub) = 0;
@@ -120,6 +121,7 @@ elseif s32_hvarea = 1,
 *** exogenous. All timber plantations are harvested at rotation age and are re-established such that the total plantation area remains constant.
   v32_land.fx(j,harvest32,ac)$(ac.off < p32_rotation_cellular_harvesting(t,j)) = pc32_land(j,harvest32,ac);
   v32_land.fx(j,harvest32,ac)$(ac.off >= p32_rotation_cellular_harvesting(t,j)) = 0;
+  v32_prod_surplus.up(j) = Inf;
   s32_establishment_static = 1;
   s32_establishment_dynamic = 0;
 
