@@ -1,4 +1,4 @@
-;MitiConsv;AR0;AR50;AR100;AR150;AR200;AR250;AR300;AR350;AR400;BH;unconstrainedAR
+;MitiConsv;AR0;AR50;AR100;AR150;AR200;AR250;AR300;AR350;AR400;BH;MaxAR
 gms$s32_max_aff_area;;111;161;211;261;311;361;411;461;511;;
 gms$s56_c_price_induced_aff ;;0;1;1;1;1;1;1;1;1;;
 gms$c22_protect_scenario;;;;;;;;;;;BH;
